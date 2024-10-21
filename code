@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+#генерация
+np.random.seed(0)
+hours_studied = np.random.rand(100) * 10
+scores = 50 + (hours_studied * 10) + (np.random.randn(100) * 5)
+
+
+df = pd.DataFrame({'Hours': hours_studied, 'Scores': scores})
+
+# визуализация данных
+plt.scatter(df['Hours'], df['Scores'], color='blue', label='Данные')
+plt.xlabel('Часы обучения')
+plt.ylabel('Оценка')
+plt.title('Зависимость оценки от часов обучения')
+plt.legend()
+plt.show()
+
+X = df[['Hours']]
+Y = df['Scores']
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, Y_train)
+
+# прогноз
+Y_pred = model.predict(X_test)
+
+mse = mean_squared_error(Y_test, Y_pred)
+r2 = r2_score(Y_test, Y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R² Score: {r2}')
+
+# результат
+plt.scatter(df['Hours'], df['Scores'], color='blue', label='Данные')
+plt.plot(X_test, Y_pred, color='red', linewidth=2, label='Регрессионная линия')
+plt.xlabel('Часы обучения')
+plt.ylabel('Оценка')
+plt.title('Линейная регрессия: Оценка в зависимости от часов обучения')
+plt.legend()
+plt.show()
+
